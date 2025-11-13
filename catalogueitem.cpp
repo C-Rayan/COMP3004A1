@@ -1,12 +1,11 @@
-#include "CatalogueItem.h"
+#include "catalogueitem.h"
 
-
-CatalogueItem::CatalogueItem(const string& title, const string& author, int publishYear, const string& status, const string& condition, const string& format, int quantity) : holds(){
+CatalogueItem::CatalogueItem(const string& title, const string& author, int publishYear, const string& status, const string& condition, const string& format, int quantity){
     this->title = title;
     this->author = author;
     this->publishYear = publishYear;
     this->status = status;
-    this->condtion = condition;
+    this->condition = condition;
     this->format = format;
     this->quantity = quantity;
 }
@@ -18,17 +17,6 @@ void CatalogueItem::reduceQuantity(int amount){
     else{
         std::cout << "The quantity cannot reduce below 0" << std::endl;
     }
-}
-
-
-bool CatalogueItem::equals(const CatalogueItem& item){
-    if (this->title == item.title
-      && this->author == item.author
-        && this->publishYear == item.publishYear
-        && this->condtion == item.condtion
-        && this->format == item.format)
-        return true;
-    return false;
 }
 
 void CatalogueItem::increaseQuantity(int amount){

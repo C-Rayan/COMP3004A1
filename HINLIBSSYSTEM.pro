@@ -19,6 +19,7 @@ SOURCES += \
     main.cpp \
     patron.cpp \
     system.cpp \
+    viewItem.cpp \
     viewauth.cpp
 
 HEADERS += \
@@ -28,10 +29,12 @@ HEADERS += \
     loan.h \
     patron.h \
     system.h \
+    viewItem.h \
     viewauth.h
 
 FORMS += \
     browsecatalogue.ui \
+    viewItem.ui \
     viewauth.ui
 
 # Default rules for deployment.
