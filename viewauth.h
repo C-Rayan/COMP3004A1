@@ -17,12 +17,17 @@ class ViewAuth : public QMainWindow
 public:
     ViewAuth(QWidget *parent = nullptr);
     ~ViewAuth();
+
     static System hinLibs;
+
+signals:
+    void getLoginSuccess();
 
 private slots:
     void on_buttonSignIn_clicked();
 
 private:
     Ui::ViewAuth *ui;
+    bool loginSuccessful = false;
 };
 #endif // VIEWAUTH_H

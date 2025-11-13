@@ -15,6 +15,7 @@ SOURCES += \
     catalogue.cpp \
     catalogueitem.cpp \
     digitalMedia.cpp \
+    item.cpp \
     loan.cpp \
     main.cpp \
     patron.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     browsecatalogue.h \
     catalogue.h \
     catalogueitem.h \
+    item.h \
     loan.h \
     patron.h \
     system.h \
@@ -32,6 +34,7 @@ HEADERS += \
 
 FORMS += \
     browsecatalogue.ui \
+    item.ui \
     viewauth.ui
 
 # Default rules for deployment.
