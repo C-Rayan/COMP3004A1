@@ -23,10 +23,13 @@ public:
     }
 signals:
     void onLoanState();
+    //void addedAnItem();
 
 private slots:
-    void on_pushButton_3_clicked();
-    void getAnItem();
+    //void getAnItem();
+    void addedAnItemSlot();
+
+    void on_AddLoanButton_clicked();
 
 private:
    // vector<Patron> loanedPatrons;

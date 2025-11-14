@@ -43,10 +43,10 @@ void viewStatus::loadData(){
         ui->daysRemList->addItem(QString::fromStdString(to_string(loan.getRemainingDays())) );
     }
 
-    map<CatalogueItem, int> holds = status.getHoldList();
+    /*map<CatalogueItem, int> holds = status.getHoldList();
     for (auto hold :holds ) {
         ui->holdsTitleList->addItem(QString::fromStdString(hold.first.getTitle()));
         ui->holdsPositionList->addItem(QString::fromStdString(to_string(hold.second)));
-    }
+    }*/
 
 }

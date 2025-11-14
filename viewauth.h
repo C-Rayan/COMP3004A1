@@ -26,6 +26,7 @@ public:
 
 signals:
     void getLoginSuccess();
+    void Success();
 
 private slots:
     void on_buttonSignIn_clicked();

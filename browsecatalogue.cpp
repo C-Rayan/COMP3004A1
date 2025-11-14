@@ -1,6 +1,6 @@
 #include "browsecatalogue.h"
 #include "ui_browsecatalogue.h"
-#include "ui_catalogueitem.h"
+//#include "ui_catalogueitem.h"
 
 BrowseCatalogue::BrowseCatalogue(QWidget *parent, Catalogue catalogue): QMainWindow(parent), ui(new Ui::BrowseCatalogue), catalogue(catalogue)
 {
@@ -13,12 +13,13 @@ BrowseCatalogue::BrowseCatalogue(QWidget *parent, Catalogue catalogue): QMainWin
 
     for (int i = 0; i < catalogue.getItemList().size(); i++){
         item* ofItem = new item(widget, catalogue.getItemList().at(i));
+        // Boxes get cutoff if you don't set size policy to minimum
         ofItem->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         box->addWidget(ofItem);
-        //QObject::connect(ofItem, &item::onLoanState, this, &BrowseCatalogue::getSomeItem);
         this->itemSubList.push_back(ofItem);
     }
 
+    // Need to adjustSize of the widget (Container in the scrollArea) so that we can have a scroll view
     widget->adjustSize();
     ui->scrollArea->setWidgetResizable(true);
     ui->scrollArea->setWidget(widget);

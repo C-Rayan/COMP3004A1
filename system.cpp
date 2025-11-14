@@ -6,10 +6,10 @@ void System::addPatron(const Patron& patron){
     this->patronList.push_back(patron);
 }
 
-int System::systemAuth(const std::string& name, int pin){
+int System::systemAuth(const int cardNumber,const int pin){
     // Check if username matches inside of memory database
     for (int i = 0; i < (int) this->patronList.size(); i++){
-        if (patronList[i].getName() == name && patronList[i].getPin() == pin){
+        if (patronList[i].getCardNumber() == cardNumber && patronList[i].getPin() == pin){
             return i;
         }
     }

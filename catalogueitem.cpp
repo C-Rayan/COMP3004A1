@@ -4,12 +4,12 @@ CatalogueItem::CatalogueItem(const string& title, const string& author, int publ
     this->title = title;
     this->author = author;
     this->publishYear = publishYear;
-    this->status = "unavailable";
+    this->status = "Unavailable";
     this->condition = condition;
     this->format = format;
     this->quantity = quantity;
     if (quantity > 0){
-        this->status = "available";
+        this->status = "Available";
     }
 
 }
