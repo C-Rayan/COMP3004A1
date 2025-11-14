@@ -30,7 +30,7 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <property name="sizeConstraint">
-     <enum>QLayout::SetDefaultConstraint</enum>
+     <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
     </property>
     <item>
      <widget class="QTextEdit" name="txtTitle_2">
@@ -40,16 +40,31 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
-     <widget class="QTextEdit" name="txtAuthor_2"/>
+     <widget class="QTextEdit" name="txtAuthor_2">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item>
-     <widget class="QTextEdit" name="txtFormat_2"/>
+     <widget class="QTextEdit" name="txtFormat_2">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item>
-     <widget class="QTextEdit" name="txtAvailable_2"/>
+     <widget class="QTextEdit" name="txtAvailable_2">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="AddLoanButton">
@@ -73,23 +88,9 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="RetunHoldButton">
+     <widget class="QPushButton" name="ReturnHoldButton">
       <property name="text">
        <string>ReturnHold</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="cancelHoldButton">
-      <property name="text">
-       <string>CancelHold</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="returnButton">
-      <property name="text">
-       <string>Return</string>
       </property>
      </widget>
     </item>

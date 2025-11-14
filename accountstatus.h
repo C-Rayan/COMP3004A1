@@ -16,7 +16,7 @@ public:
 
     int getBalance();
     vector<Loan> getLoans();
-    const map<string, int> getHoldList();
+    const map<CatalogueItem, int> getHoldList();
 
 private:
     bool borrowingPrivelages;

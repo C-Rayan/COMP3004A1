@@ -18,7 +18,6 @@ SOURCES += \
     digitalMedia.cpp \
     librarian.cpp \
     loan.cpp \
-    main.cpp \
     patron.cpp \
     system.cpp \
     systemadmin.cpp \

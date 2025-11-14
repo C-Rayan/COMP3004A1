@@ -23,6 +23,7 @@ ViewAuth::~ViewAuth()
     delete ui;
 }
 
+// Simple in memory check to determine if username and pin are correct
 void ViewAuth::on_buttonSignIn_clicked()
 {
     int card;
@@ -51,7 +52,10 @@ int main(int argc, char *argv[])
     ViewAuth w;
 
     // IMPLEMENTATION OF CARD NUMBER IS AUTO INCREMENTED
-    // patron1 would have cardNumber "1", patron2 would have cardnumber "2"
+    // patron1 has cardNumber "1", patron2 has cardnumber "2", patron3 has cardnumber "3" and so on
+    // To test 1:
+    // Write cardnumber: "1" and pass: "0000"
+    // same for the rest
     Patron patron1("Leon", "leon@gmail.com", 0000);
     Patron patron2("Chris", "chris@hotmail.com", 1234);
     Patron patron3("Hunk", "hunk@gmail.com", 2068);
@@ -64,6 +68,7 @@ int main(int argc, char *argv[])
     ViewAuth::hinLibs.addPatron(patron4);
     ViewAuth::hinLibs.addPatron(patron5);
 
+    // Show the authentication screen
     w.show();
 
     // 5 Fictional Books
@@ -128,16 +133,50 @@ int main(int argc, char *argv[])
     bool value = false;
     //Loan(book1, tm());
     for (int i = 0; i < c.itemSubList.size(); i++){
-        QObject::connect(c.itemSubList.at(i), &item::onLoanState, [&c, i, &w, book1, &value]{
+        // Checks for an add signal
+        QObject::connect(c.itemSubList.at(i), &item::onLoanState, [&c, i, &w, &value]{
+            // Adds the loan to this patron and disables appropriate buttons
             value = w.mainPatron.addLoan(Loan(c.itemSubList.at(i)->getMyItem(), tm()));
             // If value was succesfully added, then disable button
             if (value){
-                c.itemSubList.at(i)->setEnabled(false);
+                // Disable every button except the one that lets you return the loan
+                for (int j = 0; j < c.itemSubList.at(i)->findChildren<QPushButton*>().size(); j++){
+                    c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(false);
+                }
+                c.itemSubList.at(i)->findChild<QPushButton*>("ReturnLoanButton")->setEnabled(true);
             }
         });
-        // if the item was succesfully added
-    }
 
+        // Checks for a hold signal
+        QObject::connect(c.itemSubList.at(i), &item::onHoldState, [&c, i, &w]{
+            // Adds the hold to this patron and disables appropriate buttons
+            w.mainPatron.addHold(c.itemSubList.at(i)->getMyItem());
+            for (int j = 0; j < c.itemSubList.at(i)->findChildren<QPushButton*>().size(); j++){
+                c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(false);
+            }
+            c.itemSubList.at(i)->findChild<QPushButton*>("ReturnHoldButton")->setEnabled(true);
+        });
+
+        // Checks for a remove signal
+        QObject::connect(c.itemSubList.at(i), &item::offLoanState, [&c, i, &w]{
+           // Check if item was added is done in viewItem.cpp
+            // Removes the loan to this patron and enables all buttons
+            w.mainPatron.removeLoan(c.itemSubList.at(i)->getMyItem());
+            for (int j = 0; j < c.itemSubList.at(i)->findChildren<QPushButton*>().size(); j++){
+                c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(true);
+            }
+        });
+
+        // Checks for a removeHold signal
+        QObject::connect(c.itemSubList.at(i), &item::offHoldState, [&c, i, &w]{
+            // Check if item was added is done in viewItem.cpp
+            // Removes the hold to this patron and enables all buttons
+            w.mainPatron.removeHold(c.itemSubList.at(i)->getMyItem());
+            for (int j = 0; j < c.itemSubList.at(i)->findChildren<QPushButton*>().size(); j++){
+                c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(true);
+            }
+        });
+    }
     return a.exec();
 }
 

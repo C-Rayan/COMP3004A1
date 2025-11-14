@@ -1,4 +1,4 @@
-#include "accountstatus.h"
+#include "accountStatus.h"
 #include <map>
 
 AccountStatus::AccountStatus(Patron* p): person(*p){
@@ -13,16 +13,16 @@ vector<Loan> AccountStatus::getLoans(){
     return loans;
 }
 
-const map<string, int> AccountStatus::getHoldList(){
-    //Key: title of item on hold, Value: patron's postion in queue
-    map<string, int> pairs;
+const map<CatalogueItem, int> AccountStatus::getHoldList(){
+    //Key: item on hold, Value: postion in queue
+    map<CatalogueItem, int> pairs;
     for(CatalogueItem item: holds){
         int  index = item.searchQueue(person.getName());
         if(index == -1){
             continue;
         }
         else{
-            pairs.insert({item.getTitle(), index});
+           // pairs.insert({item, index});
         }
     }
     return pairs;
