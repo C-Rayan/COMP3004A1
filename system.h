@@ -8,7 +8,7 @@
 class System {
 public:
     System();
-    int systemAuth(const std::string& name, int pin);
+    int systemAuth(const int cardNumber,const int pin);
     void addPatron(const Patron& patron);
     Patron getPatronAtIndex(int index);
     static Catalogue catalogue1;

@@ -22,7 +22,7 @@ const map<CatalogueItem, int> AccountStatus::getHoldList(){
             continue;
         }
         else{
-            pairs.insert({item, index});
+           // pairs.insert({item, index});
         }
     }
     return pairs;

@@ -16,10 +16,11 @@ SOURCES += \
     catalogue.cpp \
     catalogueitem.cpp \
     digitalMedia.cpp \
+    librarian.cpp \
     loan.cpp \
-    main.cpp \
     patron.cpp \
     system.cpp \
+    systemadmin.cpp \
     viewItem.cpp \
     viewauth.cpp \
     viewstatus.cpp
@@ -29,9 +30,11 @@ HEADERS += \
     browsecatalogue.h \
     catalogue.h \
     catalogueitem.h \
+    librarian.h \
     loan.h \
     patron.h \
     system.h \
+    systemadmin.h \
     viewItem.h \
     viewauth.h \
     viewstatus.h

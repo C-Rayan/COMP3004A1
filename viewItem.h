@@ -23,10 +23,15 @@ public:
     }
 signals:
     void onLoanState();
+    void onHoldState();
+    void offHoldState();
+    void offLoanState();
 
 private slots:
-    void on_pushButton_3_clicked();
-    void getAnItem();
+    void on_AddLoanButton_clicked();
+    void on_AddHoldButton_clicked();
+    void on_ReturnLoanButton_clicked();
+    void on_ReturnHoldButton_clicked();
 
 private:
    // vector<Patron> loanedPatrons;
