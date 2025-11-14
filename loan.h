@@ -1,16 +1,22 @@
 #ifndef LOAN_H
 #define LOAN_H
 
-#include "catalogueItem.h"
+#include "catalogueitem.h"
 #include <string>
+#include <ctime>
 
-class Loan {
+class Loan : public CatalogueItem{
 
 public:
-    Loan(const CatalogueItem& item);
+    Loan(const CatalogueItem& item, tm date);
+
+    int getRemainingDays() const;
+    CatalogueItem getItem() const;
+    tm getDueDate() ;
+
 
 private:
-    int remainingDays;
+    tm dueDate;
     CatalogueItem item;
 };
 

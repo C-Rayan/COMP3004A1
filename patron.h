@@ -11,14 +11,24 @@ private:
     int cardNumber;
     string name;
     string email;
-    int currentLoans;
     int pin;
     std::vector<Loan> myLoans;
+    std::vector<CatalogueItem> myHolds;
+    int numLoans = 0;
+    bool addLoanSuccess = false;
 
 public:
     Patron(const string& name, const string& email, int pin);
+
+    // Used to create an empty patron (Whose values will be stored later)
+    Patron();
     int getPin();
     std::string getName();
     void ViewAccountStatus();
-    int getLoans();
+    int getLoansSize();
+    void addLoan(const Loan& loan);
+    bool getLoanSuccess();
+    std::vector<Loan> getLoans();
+    std::vector<CatalogueItem> getHoldList();
+
 };

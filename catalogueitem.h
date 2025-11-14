@@ -3,9 +3,12 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 #include <map>
 #include <iterator>
+#include <ctime>
+#include <vector>
+#include <iterator>
+#include <algorithm>
 
 using namespace std;
 
@@ -15,29 +18,32 @@ private:
     string author;
     int publishYear;
     string status;
-    string condtion;
+    string condition;
     string format;
+    string dueDate; // consider turning into date type
     int quantity;
     vector<string> holds;
 
 public:
     //Constructor
-    CatalogueItem(const string& title, const string& author, int publishYear, const string& status, const string& condition, const string& format, int quantity);
-
+    CatalogueItem(const string& title, const string& author, int publishYear, const string& condtion, const string& format, int quantity);
+    // Base constructor, not useful, only used to force the default because parameter of QWidget functions
+    CatalogueItem():
+        title("placeholder"), author("author"), publishYear(0), status("unavailable"), condition("unknown"), format("unknown"), quantity(-1)
+    {}
     //getters
-    const string& getTitle();
-    const string& getAuthor();
-    const string& getStatus();
-    const string& getFormat();
-    const string& getCondtion();
-
-    int getQuantity();
-
-    bool equals(const CatalogueItem& item);
+    const string& getTitle(){return title;};
+    const string& getAuthor(){return author;};
+    const string& getStatus(){return status;};
+    const string& getFormat(){return format;};
+    const string& getCondition(){return condition;};
+    int getQuantity(){return quantity;};
+    const string& getDueDate(){return dueDate;};
 
     void reduceQuantity(int amount);
     void increaseQuantity(int amount);
-
+    void setStatus(std::string status){this->status = status;}
+    int  searchQueue(string name);
 
 
 };
