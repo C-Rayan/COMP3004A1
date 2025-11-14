@@ -13,6 +13,10 @@ vector<Loan> AccountStatus::getLoans(){
     return loans;
 }
 
+const string AccountStatus::getPatronName() {
+    return person.getName();
+}
+
 const map<string, int> AccountStatus::getHoldList(){
     //Key: title of item on hold, Value: patron's postion in queue
     map<string, int> pairs;

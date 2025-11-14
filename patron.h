@@ -1,3 +1,5 @@
+#ifndef PATRON_H
+#define PATRON_H
 #include <vector>
 #include <string>
 #include "loan.h"
@@ -32,3 +34,4 @@ public:
     int getCardNumber();
 
 };
+#endif

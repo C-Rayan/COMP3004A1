@@ -1,8 +1,8 @@
 #include "browsecatalogue.h"
 #include "ui_browsecatalogue.h"
-#include "viewstatus.h"
+#include "ui_viewauth.h"
 
-BrowseCatalogue::BrowseCatalogue(QWidget *parent, Catalogue catalogue): QMainWindow(parent), ui(new Ui::BrowseCatalogue), catalogue(catalogue)
+BrowseCatalogue::BrowseCatalogue(QWidget *parent, Catalogue catalogue, Patron* patron): QMainWindow(parent), ui(new Ui::BrowseCatalogue), catalogue(catalogue), patron(patron)
 {
     ui->setupUi(this);
 
@@ -35,10 +35,10 @@ void BrowseCatalogue::getSomeItem(){
     emit someHappened();
 }
 
-
-void BrowseCatalogue::on_pushButton_clicked()
+void BrowseCatalogue::on_accountButton_clicked()
 {
-
-
+    viewStatus *statusMenu =new viewStatus(this,  patron );
+    statusMenu->setWindowFlags(Qt::Window);
+    statusMenu->show();
 }
 
