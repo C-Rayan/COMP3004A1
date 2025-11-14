@@ -8,6 +8,10 @@
 class Loan : public CatalogueItem{
 
 public:
+    // compares addresses and remove its same addresss
+    bool operator==(const Loan& check) const{
+        return &this->item == &check.item;
+    }
     Loan(const CatalogueItem& item, tm date);
 
     int getRemainingDays() const;

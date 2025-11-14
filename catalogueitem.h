@@ -25,6 +25,10 @@ private:
     vector<string> holds;
 
 public:
+    // compares both addresses tocheck if they are same
+    bool operator==(const CatalogueItem& check) const{
+        return this == &check;
+    }
     //Constructor
     CatalogueItem(const string& title, const string& author, int publishYear, const string& condtion, const string& format, int quantity);
     // Base constructor, not useful, only used to force the default because parameter of QWidget functions
@@ -32,7 +36,7 @@ public:
         title("placeholder"), author("author"), publishYear(0), status("unavailable"), condition("unknown"), format("unknown"), quantity(-1)
     {}
     //getters
-    const string& getTitle() const{return title;};
+    const string& getTitle(){return title;};
     const string& getAuthor(){return author;};
     const string& getStatus(){return status;};
     const string& getFormat(){return format;};
@@ -44,6 +48,7 @@ public:
     void increaseQuantity(int amount);
     void setStatus(std::string status){this->status = status;}
     int  searchQueue(string name);
+    bool equals(const CatalogueItem& item);
 
 
 };

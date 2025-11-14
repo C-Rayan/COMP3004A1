@@ -1,4 +1,4 @@
-#include "catalogueitem.h"
+#include "CatalogueItem.h"
 
 class digitalMedia: public CatalogueItem{
 private:

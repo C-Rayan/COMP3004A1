@@ -6,11 +6,13 @@ BrowseCatalogue::BrowseCatalogue(QWidget *parent, Catalogue catalogue, Patron* p
 {
     ui->setupUi(this);
 
+    // New widget and layout that will hold all subwidgets (item views)
     QWidget* widget = new QWidget();
     QVBoxLayout* box = new QVBoxLayout(widget);
     widget->setLayout(box);
     ui->scrollArea->ensureWidgetVisible(widget);
 
+    // Go through every catalogue item, and add it to the view and to a list
     for (int i = 0; i < catalogue.getItemList().size(); i++){
         item* ofItem = new item(widget, catalogue.getItemList().at(i));
         // Boxes get cutoff if you don't set size policy to minimum

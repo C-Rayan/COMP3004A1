@@ -1,4 +1,4 @@
-#include "accountstatus.h"
+#include "accountStatus.h"
 #include <map>
 
 AccountStatus::AccountStatus(Patron* p): person(*p){
@@ -26,7 +26,7 @@ const map<string, int> AccountStatus::getHoldList(){
             continue;
         }
         else{
-            pairs.insert({item.getTitle(), index});
+           // pairs.insert({item, index});
         }
     }
     return pairs;

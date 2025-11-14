@@ -1,7 +1,8 @@
 #ifndef SYSTEMADMIN_H
 #define SYSTEMADMIN_H
+#include "patron.h"
 
-class SystemAdmin
+class SystemAdmin : public Patron
 {
 public:
     SystemAdmin();

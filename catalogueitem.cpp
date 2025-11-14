@@ -37,3 +37,12 @@ int CatalogueItem::searchQueue(string name){
     return index;
 }
 
+
+// Checks if two items are equivalent
+bool CatalogueItem::equals(const CatalogueItem& item){
+    if (this->author == item.author && this->condition == item.condition &&
+        this->format == item.format && this->publishYear == item.publishYear &&
+        this->title == item.title && this->status == item.status)
+        return true;
+    return false;
+}
