@@ -1,3 +1,5 @@
+#ifndef PATRON_H
+#define PATRON_H
 #include <vector>
 #include <string>
 #include "loan.h"
@@ -35,3 +37,4 @@ public:
     void removeHold(const CatalogueItem& item);
     Loan* getLoanForItem(const CatalogueItem& item);
 };
+#endif

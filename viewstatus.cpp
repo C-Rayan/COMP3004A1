@@ -1,15 +1,6 @@
 #include "viewStatus.h"
 #include "ui_viewStatus.h"
 
-viewStatus::viewStatus(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::viewStatus),
-    status(NULL)
-{
-    ui->setupUi(this);
-    //loadData();
-}
-
 viewStatus::viewStatus(QWidget *parent, Patron* person) :
     QWidget(parent),
     ui(new Ui::viewStatus),
@@ -27,13 +18,16 @@ viewStatus::~viewStatus()
 
 void viewStatus::on_backButton_clicked()
 {
-    close();
+    this->parentWidget()->show();
+    this->close();
 
 }
 
 void viewStatus::loadData(){
     char time[50];
     tm temp;
+
+    ui->usernameLabel->setText(QString::fromStdString(status.getPatronName()));
     for (Loan loan: status.getLoans() ) {
         temp = loan.getDueDate();
         strftime(time,50, "%m/%d/%y", &temp);
@@ -47,6 +41,6 @@ void viewStatus::loadData(){
     for (auto hold :holds ) {
         ui->holdsTitleList->addItem(QString::fromStdString(hold.first.getTitle()));
         ui->holdsPositionList->addItem(QString::fromStdString(to_string(hold.second)));
-    }*/
+    }
 
 }

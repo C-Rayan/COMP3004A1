@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 
 
     // Emits a signal when the user succesfully logs in, to now open the catalogue screen
-    BrowseCatalogue c(nullptr, System::catalogue1);
+    BrowseCatalogue c(nullptr, System::catalogue1, &ViewAuth::mainPatron);
     QObject::connect(&w, &ViewAuth::getLoginSuccess, &c, &BrowseCatalogue::show);
     bool value = false;
     //Loan(book1, tm());

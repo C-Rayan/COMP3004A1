@@ -13,9 +13,13 @@ vector<Loan> AccountStatus::getLoans(){
     return loans;
 }
 
-const map<CatalogueItem, int> AccountStatus::getHoldList(){
-    //Key: item on hold, Value: postion in queue
-    map<CatalogueItem, int> pairs;
+const string AccountStatus::getPatronName() {
+    return person.getName();
+}
+
+const map<string, int> AccountStatus::getHoldList(){
+    //Key: title of item on hold, Value: patron's postion in queue
+    map<string, int> pairs;
     for(CatalogueItem item: holds){
         int  index = item.searchQueue(person.getName());
         if(index == -1){
