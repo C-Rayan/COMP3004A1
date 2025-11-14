@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     Book.cpp \
     Magazine.cpp \
+    accountstatus.cpp \
     browsecatalogue.cpp \
     catalogue.cpp \
     catalogueitem.cpp \
@@ -19,19 +20,26 @@ SOURCES += \
     main.cpp \
     patron.cpp \
     system.cpp \
-    viewauth.cpp
+    viewItem.cpp \
+    viewauth.cpp \
+    viewstatus.cpp
 
 HEADERS += \
+    accountstatus.h \
     browsecatalogue.h \
     catalogue.h \
     catalogueitem.h \
     loan.h \
     patron.h \
     system.h \
-    viewauth.h
+    viewItem.h \
+    viewauth.h \
+    viewstatus.h
 
 FORMS += \
     browsecatalogue.ui \
+    viewItem.ui \
+    viewStatus.ui \
     viewauth.ui
 
 # Default rules for deployment.

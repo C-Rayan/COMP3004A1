@@ -17,12 +17,22 @@ class ViewAuth : public QMainWindow
 public:
     ViewAuth(QWidget *parent = nullptr);
     ~ViewAuth();
+    // static Patron& getMainPatron(){
+    //     return *mainPatron;
+    // }
+    static Patron mainPatron;
+
     static System hinLibs;
+
+signals:
+    void getLoginSuccess();
 
 private slots:
     void on_buttonSignIn_clicked();
 
 private:
     Ui::ViewAuth *ui;
+    bool loginSuccessful = false;
+    //static Patron* mainPatron;
 };
 #endif // VIEWAUTH_H

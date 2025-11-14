@@ -1,14 +1,17 @@
-#include "CatalogueItem.h"
+#include "catalogueitem.h"
 
-
-CatalogueItem::CatalogueItem(const string& title, const string& author, int publishYear, const string& status, const string& condition, const string& format, int quantity) : holds(){
+CatalogueItem::CatalogueItem(const string& title, const string& author, int publishYear, const string& condition, const string& format, int quantity){
     this->title = title;
     this->author = author;
     this->publishYear = publishYear;
-    this->status = status;
-    this->condtion = condition;
+    this->status = "unavailable";
+    this->condition = condition;
     this->format = format;
     this->quantity = quantity;
+    if (quantity > 0){
+        this->status = "available";
+    }
+
 }
 
 void CatalogueItem::reduceQuantity(int amount){
@@ -20,19 +23,17 @@ void CatalogueItem::reduceQuantity(int amount){
     }
 }
 
-
-bool CatalogueItem::equals(const CatalogueItem& item){
-    if (this->title == item.title
-      && this->author == item.author
-        && this->publishYear == item.publishYear
-        && this->condtion == item.condtion
-        && this->format == item.format)
-        return true;
-    return false;
-}
-
 void CatalogueItem::increaseQuantity(int amount){
     this->quantity = quantity + amount;
 }
 
+int CatalogueItem::searchQueue(string name){
+    //Looks for the iteraator pointing the specified name
+    auto it = find(holds.begin(),holds.end(), name);
+    int index =-1;
+    if(it != holds.end()){
+        index = distance(holds.begin(), it);
+    }
+    return index;
+}
 
