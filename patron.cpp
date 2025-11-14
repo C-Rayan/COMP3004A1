@@ -1,5 +1,5 @@
 #include <string>
-#include "Patron.h"
+#include "patron.h"
 
 int Patron::curUsers = 0;
 Patron::Patron(const string& name, const string& email, int pin){
