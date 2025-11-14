@@ -2,14 +2,13 @@
 #include "ui_viewItem.h"
 #include "patron.h"
 
-
 item::item(QWidget *parent, const CatalogueItem& item): QWidget(parent), myItem(item), ui(new Ui::item){
     ui->setupUi(this);
     ui->txtTitle_2->setText(QString::fromStdString(myItem.getTitle()));
+    ui->txtAuthor_2->setText(QString::fromStdString(myItem.getAuthor()));
+    ui->txtFormat_2->setText(QString::fromStdString(myItem.getFormat()));
+    ui->txtAvailable_2->setText(QString::fromStdString(myItem.getStatus()));
 }
-//
-// ui->txtAvailable_2->setText((QString&)myItem.getStatus());
-// ui->txtFormat_2->setText((QString&) myItem.getFormat());
 
 item::~item()
 {
@@ -18,11 +17,14 @@ item::~item()
 
 
 
-void item::on_pushButton_3_clicked()
+
+void item::addedAnItemSlot(){
+     ui->AddLoanButton->setEnabled(false);
+}
+
+
+void item::on_AddLoanButton_clicked()
 {
     emit onLoanState();
 }
 
-void item::getAnItem(){
-    emit
-}

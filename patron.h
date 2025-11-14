@@ -7,15 +7,14 @@ using std::string;
 
 class Patron {
 private:
-    int curUsers = 0;
     int cardNumber;
+    static int curUsers;
     string name;
     string email;
     int pin;
     std::vector<Loan> myLoans;
     std::vector<CatalogueItem> myHolds;
     int numLoans = 0;
-    bool addLoanSuccess = false;
 
 public:
     Patron(const string& name, const string& email, int pin);
@@ -26,9 +25,10 @@ public:
     std::string getName();
     void ViewAccountStatus();
     int getLoansSize();
-    void addLoan(const Loan& loan);
+    bool addLoan(const Loan& loan);
     bool getLoanSuccess();
     std::vector<Loan> getLoans();
     std::vector<CatalogueItem> getHoldList();
+    int getCardNumber();
 
 };

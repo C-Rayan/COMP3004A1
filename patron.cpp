@@ -1,13 +1,15 @@
 #include <string>
 #include "patron.h"
 
+int Patron::curUsers = 0;
 Patron::Patron(const string& name, const string& email, int pin){
-    this->cardNumber = curUsers++;
+    this->cardNumber = ++curUsers;
     this->name = name;
     this->email = email;
     this->pin = pin;
 }
 
+// Used to force QT's default parameters in some functions, is not used however
 Patron::Patron(){
     name = "empty";
     email = "empty";
@@ -22,18 +24,15 @@ std::string Patron::getName(){
     return name;
 }
 
-void Patron::addLoan(const Loan& loan){
+bool Patron::addLoan(const Loan& loan){
     if (numLoans >= 3 || loan.getItem().getStatus() == "Unavailable"){
-        return;
+        return false;
     }
     this->myLoans.push_back(loan);
     numLoans++;
     loan.getItem().reduceQuantity(1);
     loan.getItem().setStatus("Unavailable");
-}
-
-bool Patron::getLoanSuccess(){
-    return addLoanSuccess;
+    return true;
 }
 
 int Patron::getLoansSize(){
@@ -49,7 +48,6 @@ std::vector<CatalogueItem> Patron::getHoldList(){
     return myHolds;
 }
 
-
-
-
-
+int Patron::getCardNumber(){
+    return cardNumber;
+}

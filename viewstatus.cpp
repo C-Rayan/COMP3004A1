@@ -48,6 +48,6 @@ void viewStatus::loadData(){
     for (auto hold :holds ) {
         ui->holdsTitleList->addItem(QString::fromStdString(hold.first));
         ui->holdsPositionList->addItem(QString::fromStdString(to_string(hold.second)));
-    }
+    }*/
 
 }
