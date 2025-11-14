@@ -32,7 +32,7 @@ public:
         title("placeholder"), author("author"), publishYear(0), status("unavailable"), condition("unknown"), format("unknown"), quantity(-1)
     {}
     //getters
-    const string& getTitle(){return title;};
+    const string& getTitle() const{return title;};
     const string& getAuthor(){return author;};
     const string& getStatus(){return status;};
     const string& getFormat(){return format;};

@@ -1,4 +1,4 @@
-#include "viewStatus.h"
+#include "viewstatus.h"
 #include "ui_viewStatus.h"
 
 viewStatus::viewStatus(QWidget *parent) :
@@ -25,6 +25,7 @@ viewStatus::~viewStatus()
     delete ui;
 }
 
+//connect
 void viewStatus::on_backButton_clicked()
 {
     close();
@@ -43,9 +44,9 @@ void viewStatus::loadData(){
         ui->daysRemList->addItem(QString::fromStdString(to_string(loan.getRemainingDays())) );
     }
 
-    map<CatalogueItem, int> holds = status.getHoldList();
+    map<string, int> holds = status.getHoldList();
     for (auto hold :holds ) {
-        ui->holdsTitleList->addItem(QString::fromStdString(hold.first.getTitle()));
+        ui->holdsTitleList->addItem(QString::fromStdString(hold.first));
         ui->holdsPositionList->addItem(QString::fromStdString(to_string(hold.second)));
     }
 

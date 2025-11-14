@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>701</width>
+    <width>860</width>
     <height>161</height>
    </rect>
   </property>
@@ -24,13 +24,13 @@
     <rect>
      <x>10</x>
      <y>20</y>
-     <width>681</width>
+     <width>826</width>
      <height>61</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <property name="sizeConstraint">
-     <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+     <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <item>
      <widget class="QLineEdit" name="txtTitle_2">
@@ -98,6 +98,20 @@
      <widget class="QPushButton" name="pushButton_4">
       <property name="text">
        <string>PutOnHold</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="cancelHoldButton">
+      <property name="text">
+       <string>CancelHold</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="returnButton">
+      <property name="text">
+       <string>Return</string>
       </property>
      </widget>
     </item>

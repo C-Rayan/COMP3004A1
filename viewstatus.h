@@ -2,7 +2,7 @@
 #define VIEWSTATUS_H
 
 #include <QWidget>
-#include "accountStatus.h"
+#include "accountstatus.h"
 
 namespace Ui {
 class viewStatus;
@@ -13,7 +13,7 @@ class viewStatus : public QWidget
     Q_OBJECT
 
 public:
-    explicit viewStatus(QWidget *parent = nullptr);
+    //explicit viewStatus(QWidget *parent = nullptr);
     viewStatus(QWidget *parent = nullptr, Patron *patron = nullptr);
     ~viewStatus();
 

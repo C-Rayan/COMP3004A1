@@ -1,5 +1,5 @@
 #include <string>
-#include "Patron.h"
+#include "patron.h"
 
 Patron::Patron(const string& name, const string& email, int pin){
     this->cardNumber = curUsers++;

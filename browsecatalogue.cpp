@@ -1,6 +1,6 @@
 #include "browsecatalogue.h"
 #include "ui_browsecatalogue.h"
-#include "ui_catalogueitem.h"
+#include "viewstatus.h"
 
 BrowseCatalogue::BrowseCatalogue(QWidget *parent, Catalogue catalogue): QMainWindow(parent), ui(new Ui::BrowseCatalogue), catalogue(catalogue)
 {
@@ -32,5 +32,12 @@ BrowseCatalogue::~BrowseCatalogue()
 
 void BrowseCatalogue::getSomeItem(){
     emit someHappened();
+}
+
+
+void BrowseCatalogue::on_pushButton_clicked()
+{
+
+
 }
 
