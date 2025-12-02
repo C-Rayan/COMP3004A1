@@ -135,8 +135,11 @@ int main(int argc, char *argv[])
     for (int i = 0; i < c.itemSubList.size(); i++){
         // Checks for an add signal
         QObject::connect(c.itemSubList.at(i), &item::onLoanState, [&c, i, &w, &value]{
+            std::time_t now = std::time(nullptr);
+            // Convert to local tm structure
+            std::tm* local_time = std::localtime(&now);
             // Adds the loan to this patron and disables appropriate buttons
-            value = w.mainPatron.addLoan(Loan(c.itemSubList.at(i)->getMyItem(), tm()));
+            value = w.mainPatron.addLoan(Loan(c.itemSubList.at(i)->getMyItem(), *local_time));
             // If value was succesfully added, then disable button
             if (value){
                 // Disable every button except the one that lets you return the loan

@@ -2,7 +2,7 @@
 #define VIEWSTATUS_H
 
 #include <QWidget>
-#include "accountStatus.h"
+#include "accountstatus.h"
 
 namespace Ui {
 class viewStatus;

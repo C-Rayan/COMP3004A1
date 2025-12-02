@@ -1,4 +1,4 @@
-#include "CatalogueItem.h"
+#include "catalogueitem.h"
 
 class Magazine: public CatalogueItem{
 private:

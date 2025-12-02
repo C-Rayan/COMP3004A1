@@ -32,9 +32,9 @@ public:
     std::vector<Loan> getLoans();
     std::vector<CatalogueItem> getHoldList();
     int getCardNumber();
-    void addHold(const CatalogueItem& hold);
+    void addHold(CatalogueItem hold);
     void removeLoan(const CatalogueItem& item);
-    void removeHold(const CatalogueItem& item);
+    void removeHold(const CatalogueItem item);
     Loan* getLoanForItem(const CatalogueItem& item);
 };
 #endif
