@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "system.h"
+#include "librarian.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,12 +22,14 @@ public:
     //     return *mainPatron;
     // }
     static Patron mainPatron;
+    static Librarian* mainLibrarian;
 
     static System hinLibs;
 
 signals:
     void getLoginSuccess();
     void Success();
+    void LibrarianLogin();
 
 private slots:
     void on_buttonSignIn_clicked();
@@ -34,6 +37,5 @@ private slots:
 private:
     Ui::ViewAuth *ui;
     bool loginSuccessful = false;
-    //static Patron* mainPatron;
 };
 #endif // VIEWAUTH_H

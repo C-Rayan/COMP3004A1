@@ -12,20 +12,27 @@ class Librarian{
 private:
     string name;
     string email;
-    int print;
+    int passwrd;
+    int cardNumber;
     Catalogue& catalogue;
     //sqlite3* db;
-    string dbName;
+    //string dbName;
     list<Patron> clients;
 
 
 
 public:
-    Librarian(const string name, const string email, Catalogue& c, const string dbName);
+    Librarian(const string name, const string email, Catalogue& c,int card, int pass);
+    //Librarian(const string name, const string email, int card, int pass);
+    // Prevent copying (because catalogue ref cannot be reseated)
     //Getters
     const string getName(){return name;}
     const string getEmail(){return email;}
-    int getPrint(){return print;}
+    int getPin(){return passwrd;}
+    int getCardNumber(){return cardNumber;}
+
+    void setCatalogue(Catalogue& c){ catalogue = c;}
+
     Catalogue& getCatalogue(){return catalogue;}
     list<Patron> getClients(){return clients;}
 

@@ -8,14 +8,18 @@
 #include "digitalMedia.cpp"
 #include "loan.h"
 #include "viewItem.h"
+#include  "editcatalogue.h"
 
 Catalogue System::catalogue1;
 System ViewAuth::hinLibs;
 Patron ViewAuth::mainPatron;
+Librarian* ViewAuth::mainLibrarian = nullptr;
+
 
 ViewAuth::ViewAuth(QWidget *parent): QMainWindow(parent), ui(new Ui::ViewAuth)
 {
     ui->setupUi(this);
+
 }
 
 ViewAuth::~ViewAuth()
@@ -31,13 +35,26 @@ void ViewAuth::on_buttonSignIn_clicked()
     card = ui->txtUser->text().toInt();
     pass = ui->txtPass->text().toInt();
     int index = ViewAuth::hinLibs.systemAuth(card, pass);
+
     if (ViewAuth::hinLibs.systemAuth(card, pass) != -1){
         ViewAuth::loginSuccessful = true;
         this->hide();
         // Sends a signal about the success
-        Patron newPatron = ViewAuth::hinLibs.getPatronAtIndex(index);
-        mainPatron = newPatron;
-        emit ViewAuth::getLoginSuccess();
+        //
+        // DEV NOTE: A factory could be used here
+        //
+        if(ViewAuth::hinLibs.isPatron(card)){
+            Patron newPatron = ViewAuth::hinLibs.getPatronAtIndex(index);
+            mainPatron = newPatron;
+            emit ViewAuth::getLoginSuccess();
+        }
+        else{
+            Librarian newLibrarian = ViewAuth::hinLibs.getLibrarianAtIndex(index);
+            mainLibrarian = new Librarian(newLibrarian.getName(),newLibrarian.getEmail(), newLibrarian.getCatalogue(), newLibrarian.getCardNumber(), newLibrarian.getPin());
+            emit  ViewAuth::LibrarianLogin();
+        }
+
+
     }
     else{
         ui->txtUser->clear();
@@ -126,6 +143,9 @@ int main(int argc, char *argv[])
     System::catalogue1.addItem(videoGame3);
     System::catalogue1.addItem(videoGame4);
 
+    Librarian librarian("Bob", "bob@gmail.com", System::catalogue1, 100, 6769);
+    ViewAuth::hinLibs.addLibrarian(librarian);
+
 
     // Emits a signal when the user succesfully logs in, to now open the catalogue screen
     BrowseCatalogue c(nullptr, System::catalogue1, &ViewAuth::mainPatron);
@@ -179,7 +199,26 @@ int main(int argc, char *argv[])
                 c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(true);
             }
         });
+
     }
+    //Libarian successfully loggged in
+    QObject::connect(&w, &ViewAuth::LibrarianLogin, [&w]{
+        // Allocate on heap
+        EditCatalogue* editC = new EditCatalogue(nullptr, ViewAuth::mainLibrarian);
+        editC->show();
+
+        // Connect signals for items
+        for(int i = 0; i < editC->itemList.size(); i++){
+            QObject::connect(editC->itemList.at(i), &ViewRemoveItem::offRemoveItem,
+                [editC, i, &w]{
+                    w.mainLibrarian->removeItem(editC->itemList.at(i)->getItem());
+                });
+        }
+
+        // Optional: delete editC when closed
+        QObject::connect(editC, &QWidget::destroyed, editC, &QObject::deleteLater);
+    });
+
     return a.exec();
 }
 
