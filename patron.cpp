@@ -1,5 +1,5 @@
 #include <string>
-#include "Patron.h"
+#include "patron.h"
 
 int Patron::curUsers = 0;
 Patron::Patron(const string& name, const string& email, int pin){
@@ -53,8 +53,10 @@ int Patron::getCardNumber(){
     return cardNumber;
 }
 
-void Patron::addHold(const CatalogueItem& hold){
+void Patron::addHold(CatalogueItem hold){
+    hold.addToQueue(name);
     this->myHolds.push_back(hold);
+
 }
 
 // Method with implemented equals in CatalogueItem that checks all attributes
@@ -83,11 +85,19 @@ void Patron::removeLoan(const CatalogueItem& item){
 }
 
 // Removes a hold from a patron hold list
-void Patron::removeHold(const CatalogueItem& item){
+void Patron::removeHold(const CatalogueItem item){
+    cout<<myHolds.size() <<endl;
     if (myHolds.size() < 0){
         return;
     }
+    // update the actual stored item
+        for (CatalogueItem& hold : myHolds) {
+            if (hold.equals(item)) {
+                hold.removeFromQueue(name);
+            }
+        }
     // Goes thru the whole vector to find all* (only 1) specific hold and delete it
     myHolds.erase(std::remove(myHolds.begin(), myHolds.end(), item), myHolds.end());
+
     //also remove holds from item list
 }

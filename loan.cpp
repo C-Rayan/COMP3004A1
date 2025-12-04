@@ -1,8 +1,8 @@
 #include "loan.h"
 
 Loan::Loan(const CatalogueItem& item, tm date): dueDate(date), item(item){
-    //dueDate.tm_mday += 14; // due date is always 14 days from intial checkout
-    //mktime(&dueDate);
+    dueDate.tm_mday += 14; // due date is always 14 days from intial checkout
+    mktime(&dueDate);
 }
 
 int Loan::getRemainingDays() const{

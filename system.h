@@ -3,6 +3,7 @@
 #include <vector>
 #include "patron.h"
 #include "catalogue.h"
+#include "system.h"
 #include <string>
 
 class System {

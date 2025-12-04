@@ -16,6 +16,7 @@ SOURCES += \
     catalogue.cpp \
     catalogueitem.cpp \
     digitalMedia.cpp \
+    editcatalogue.cpp \
     librarian.cpp \
     loan.cpp \
     patron.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
     systemadmin.cpp \
     viewItem.cpp \
     viewauth.cpp \
+    viewremoveitem.cpp \
     viewstatus.cpp
 
 HEADERS += \
@@ -30,6 +32,7 @@ HEADERS += \
     browsecatalogue.h \
     catalogue.h \
     catalogueitem.h \
+    editcatalogue.h \
     librarian.h \
     loan.h \
     patron.h \
@@ -37,13 +40,16 @@ HEADERS += \
     systemadmin.h \
     viewItem.h \
     viewauth.h \
+    viewremoveitem.h \
     viewstatus.h
 
 FORMS += \
     browsecatalogue.ui \
+    editcatalogue.ui \
     viewItem.ui \
     viewStatus.ui \
-    viewauth.ui
+    viewauth.ui \
+    viewremoveitem.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

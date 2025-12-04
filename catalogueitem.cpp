@@ -27,14 +27,28 @@ void CatalogueItem::increaseQuantity(int amount){
     this->quantity = quantity + amount;
 }
 
+void CatalogueItem::addToQueue(string name){
+    holds.push_back(name);
+}
+
+void CatalogueItem::removeFromQueue(string name){
+    holds.remove(name);
+}
+
 int CatalogueItem::searchQueue(string name){
-    //Looks for the iteraator pointing the specified name
-    auto it = find(holds.begin(),holds.end(), name);
-    int index =-1;
-    if(it != holds.end()){
-        index = distance(holds.begin(), it);
+    int index = -1;
+    int cnt =0;
+    for(string holder: holds){
+        if(holder == name){
+            index = cnt;
+            break;
+        }
+        else{
+            cnt = cnt+1;
+        }
     }
     return index;
+
 }
 
 
@@ -46,3 +60,4 @@ bool CatalogueItem::equals(const CatalogueItem& item){
         return true;
     return false;
 }
+
