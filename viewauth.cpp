@@ -8,14 +8,18 @@
 #include "digitalMedia.cpp"
 #include "loan.h"
 #include "viewItem.h"
+#include  "editcatalogue.h"
 
 Catalogue System::catalogue1;
 System ViewAuth::hinLibs;
 Patron ViewAuth::mainPatron;
+Librarian* ViewAuth::mainLibrarian = nullptr;
+
 
 ViewAuth::ViewAuth(QWidget *parent): QMainWindow(parent), ui(new Ui::ViewAuth)
 {
     ui->setupUi(this);
+
 }
 
 ViewAuth::~ViewAuth()
@@ -31,12 +35,24 @@ void ViewAuth::on_buttonSignIn_clicked()
     card = ui->txtUser->text().toInt();
     pass = ui->txtPass->text().toInt();
     int index = ViewAuth::hinLibs.systemAuth(card, pass);
+
     if (ViewAuth::hinLibs.systemAuth(card, pass) != -1){
         ViewAuth::loginSuccessful = true;
         this->hide();
         // Sends a signal about the success
-        Patron newPatron = ViewAuth::hinLibs.getPatronAtIndex(index);
-        mainPatron = newPatron;
+        //
+        // DEV NOTE: A factory could be used here
+        //
+        if(ViewAuth::hinLibs.isPatron(card)){
+            Patron newPatron = ViewAuth::hinLibs.getPatronAtIndex(index);
+            mainPatron = newPatron;
+        }
+        else{
+            Librarian newLibrarian = ViewAuth::hinLibs.getLibrarianAtIndex(index);
+            mainLibrarian = new Librarian(newLibrarian.getName(),newLibrarian.getEmail(), newLibrarian.getCatalogue(), newLibrarian.getCardNumber(), newLibrarian.getPin());
+
+        }
+
         emit ViewAuth::getLoginSuccess();
     }
     else{
@@ -126,9 +142,13 @@ int main(int argc, char *argv[])
     System::catalogue1.addItem(videoGame3);
     System::catalogue1.addItem(videoGame4);
 
+    Librarian librarian("Bob", "bob@gmail.com", System::catalogue1, 2, 6769);
+    ViewAuth::hinLibs.addLibrarian(librarian);
+
 
     // Emits a signal when the user succesfully logs in, to now open the catalogue screen
     BrowseCatalogue c(nullptr, System::catalogue1, &ViewAuth::mainPatron);
+    EditCatalogue editC(nullptr, ViewAuth::mainLibrarian);
     QObject::connect(&w, &ViewAuth::getLoginSuccess, &c, &BrowseCatalogue::show);
     bool value = false;
     //Loan(book1, tm());
@@ -179,6 +199,17 @@ int main(int argc, char *argv[])
                 c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(true);
             }
         });
+
+    }
+    //Libarian successfully loggged in
+    QObject::connect(&w, &ViewAuth::getLoginSuccess, &editC, &EditCatalogue::show);
+    for(int i =0; i < editC.itemList.size(); i++){
+        //checkss for removeItem
+        QObject::connect(editC.itemList.at(i), &ViewRemoveItem::offRemoveItem, [&editC, i, &w]{
+            //removes item from  catalogue
+            w.mainLibrarian->removeItem(editC.itemList.at(i)->getItem());
+        });
+
     }
     return a.exec();
 }
