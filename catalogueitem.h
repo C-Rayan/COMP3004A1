@@ -7,6 +7,7 @@
 #include <iterator>
 #include <ctime>
 #include <vector>
+#include <list>
 #include <iterator>
 #include <algorithm>
 
@@ -14,6 +15,7 @@ using namespace std;
 
 class CatalogueItem{
 private:
+    int cid;
     string title;
     string author;
     int publishYear;
@@ -22,7 +24,7 @@ private:
     string format;
     string dueDate; // consider turning into date type
     int quantity;
-    vector<string> holds;
+    list<string> holds;
 
 public:
     // compares both addresses tocheck if they are same
@@ -30,7 +32,7 @@ public:
         return this == &check;
     }
     //Constructor
-    CatalogueItem(const string& title, const string& author, int publishYear, const string& condtion, const string& format, int quantity);
+    CatalogueItem(int cid, const string& title, const string& author, int publishYear, const string& condtion, const string& format, int quantity);
     // Base constructor, not useful, only used to force the default because parameter of QWidget functions
     CatalogueItem():
         title("placeholder"), author("author"), publishYear(0), status("unavailable"), condition("unknown"), format("unknown"), quantity(-1)
@@ -43,14 +45,18 @@ public:
     const string& getCondition(){return condition;};
     int getQuantity(){return quantity;};
     const string& getDueDate(){return dueDate;};
+    const list<string> getListOfHolders(){return holds;};
 
     void reduceQuantity(int amount);
     void increaseQuantity(int amount);
-    void setStatus(std::string status){this->status = status;}
+    void setStatus(std::string status);
     int  searchQueue(string name);
     bool equals(const CatalogueItem& item);
+    void addToQueue(string name);
+    void removeFromQueue(string name);
 
 
+    int getCID() const;
 };
 
 #endif

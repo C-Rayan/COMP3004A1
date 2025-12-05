@@ -1,4 +1,5 @@
 #include "viewauth.h"
+#include "qtextedit.h"
 #include "ui_viewauth.h"
 #include "browsecatalogue.h"
 #include "ui_browsecatalogue.h"
@@ -8,14 +9,27 @@
 #include "digitalMedia.cpp"
 #include "loan.h"
 #include "viewItem.h"
+#include  "editcatalogue.h"
 
 Catalogue System::catalogue1;
 System ViewAuth::hinLibs;
 Patron ViewAuth::mainPatron;
+Librarian* ViewAuth::mainLibrarian = nullptr;
+
 
 ViewAuth::ViewAuth(QWidget *parent): QMainWindow(parent), ui(new Ui::ViewAuth)
 {
     ui->setupUi(this);
+    // Create a new database and set the name
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    //Path may cause issues
+    db.setDatabaseName("C:/Users/chray/OneDrive/Desktop/COMP3004/team_57_D1 (1)/team_57_D1/team_57_D1/COMP3004A1-main/inventory.db");
+    if (!db.open()){
+        qDebug() << "Error" << db.lastError();
+    }
+    else{
+        qDebug() << "Working";
+    }
 }
 
 ViewAuth::~ViewAuth()
@@ -31,12 +45,39 @@ void ViewAuth::on_buttonSignIn_clicked()
     card = ui->txtUser->text().toInt();
     pass = ui->txtPass->text().toInt();
     int index = ViewAuth::hinLibs.systemAuth(card, pass);
+
     if (ViewAuth::hinLibs.systemAuth(card, pass) != -1){
         ViewAuth::loginSuccessful = true;
         this->hide();
         // Sends a signal about the success
-        Patron newPatron = ViewAuth::hinLibs.getPatronAtIndex(index);
-        mainPatron = newPatron;
+        //
+        // DEV NOTE: Combine 
+        //
+        if(ViewAuth::hinLibs.isPatron(card)){
+            Patron newPatron = ViewAuth::hinLibs.getPatronAtIndex(index);
+            mainPatron = newPatron;
+            emit ViewAuth::getLoginSuccess();
+        }
+        else{
+            Librarian newLibrarian = ViewAuth::hinLibs.getLibrarianAtIndex(index);
+            mainLibrarian = new Librarian(newLibrarian.getName(),newLibrarian.getEmail(), newLibrarian.getCatalogue(), newLibrarian.getCardNumber(), newLibrarian.getPin());
+            emit  ViewAuth::LibrarianLogin();
+        }
+
+
+        /* Uses an SQL Query to retrieve the person with the name from the DB */
+        QSqlQuery query;
+        query.prepare("SELECT * FROM PATRONS WHERE card_number = ?");
+        query.addBindValue(index);
+        query.exec();
+        while (query.next()){
+            int id = query.value(0).toInt();
+            std::string name = query.value(1).toString().toStdString();
+            std::string email = query.value(2).toString().toStdString();
+            int pin = query.value(3).toInt();
+            int numLoans = query.value(4).toInt();
+            mainPatron = Patron(id, name, email, pin, numLoans);
+        }
         emit ViewAuth::getLoginSuccess();
     }
     else{
@@ -46,97 +87,101 @@ void ViewAuth::on_buttonSignIn_clicked()
     }
 }
 
+// Get the intiial loans for this patron from the database and load them in memory
+void ViewAuth::loadLoans(){
+    QSqlQuery query("SELECT item_id FROM loans WHERE patron_id = ?");
+    query.addBindValue(mainPatron.getId());
+    query.exec();
+    int count = 0;
+    while (query.next()){
+        int iid = query.value("item_id").toInt();
+        // Creates new time, need to fix to get old time
+        Loan loan = Loan(System::catalogue1.findItem(iid), tm());
+        ViewAuth::mainPatron.addLoan(loan);
+        count++;
+    }
+}
+
+
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     ViewAuth w;
+    w.show();
 
-    // IMPLEMENTATION OF CARD NUMBER IS AUTO INCREMENTED
     // patron1 has cardNumber "1", patron2 has cardnumber "2", patron3 has cardnumber "3" and so on
     // To test 1:
     // Write cardnumber: "1" and pass: "0000"
     // same for the rest
-    Patron patron1("Leon", "leon@gmail.com", 0000);
-    Patron patron2("Chris", "chris@hotmail.com", 1234);
-    Patron patron3("Hunk", "hunk@gmail.com", 2068);
-    Patron patron4("Albert", "albert@yahoo.com", 2005);
-    Patron patron5("Ethan", "ethan@gmail.com", 1098);
 
-    ViewAuth::hinLibs.addPatron(patron1);
-    ViewAuth::hinLibs.addPatron(patron2);
-    ViewAuth::hinLibs.addPatron(patron3);
-    ViewAuth::hinLibs.addPatron(patron4);
-    ViewAuth::hinLibs.addPatron(patron5);
+    // Query the DB to find all items in our list and store them in our list (Can be done without list, but requires too many lookups)
+    // We do need to load all our items to make them visible
+    QSqlQuery findItems("SELECT * FROM CATALOGUE");
+    findItems.exec();
+    while (findItems.next()){
+        int cid = findItems.value(0).toInt();
+        std::string title = findItems.value("title").toString().toStdString();
+        std::string author = findItems.value("author").toString().toStdString();
+        int publishYear = findItems.value("publish_year").toInt();
+        std::string condition = findItems.value("condition").toString().toStdString();
+        std::string format = findItems.value("format").toString().toStdString();
+        int quantity = findItems.value("quantity").toInt();
+        CatalogueItem *item = new CatalogueItem(cid, title, author, publishYear, condition, format, quantity);
+        System::catalogue1.addItem(*item);
+    }
 
-    // Show the authentication screen
-    w.show();
 
-    // 5 Fictional Books
-    Book book1("9780385660075", "The Kite Runner", "Khaled Hosseini", 2003, "Good", "Fiction", 8);
-    Book book2("9780385660076", "A Thousand Splendid Suns", "Khaled Hosseini", 2007, "Like New", "Fiction", 12);
-    Book book3("9780143128540", "The Alchemist", "Paulo Coelho", 1988, "Good", "Fiction", 5);
-    Book book4("9780062315007", "The Catcher in the Rye", "J.D. Salinger", 1951, "Fair", "Fiction", 3);
-    Book book5("9780374533557", "The Glass Castle", "Jeannette Walls", 2005, "Good", "Fiction", 7);
-
-    // 5 Non-Fictional Books
-    NonFiction NFBook1("500.23", "9780062316097", "The Sixth Extinction: An Unnatural History", "Elizabeth Kolbert", 2014, "Excellent", "Non-Fiction", 6);
-    NonFiction NFBook2("973.004", "9780143128540", "The Alchemist", "Paulo Coelho", 1988, "Like New", "Non-Fiction", 5);
-    NonFiction NFBook3("940.531", "9780062315007", "The Diary of a Young Girl", "Anne Frank", 1947, "Good", "Non-Fiction", 3);
-    NonFiction NFBook4("973.22", "9780374533557", "The Glass Castle", "Jeannette Walls", 2005,  "Fair", "Non-Fiction", 8);
-    NonFiction NFBook5("000.000", "9780316336339", "Sapiens: A Brief History of Humankind", "Yuval Noah Harari", 2011, "Excellent", "Non-Fiction", 15);
-
-    // 3 Magazines
-    Magazine magazine1(24045, "2023-01-01", "Natural Geography", "HB Studios", 1996, "Great", "Magazine", 1);
-    Magazine magazine2(33789, "2024-03-12", "Culinary Chronicles", "TastyPress Ltd.", 2008, "Very Good", "Magazine", 4);
-    Magazine magazine3(98231, "2023-09-28", "Space Frontier Weekly", "Orbit Publications", 2019, "Good", "Magazine", 2);
-
-    // 3 Movies
-    digitalMedia movie1("Horror", "14+", "movie", "Black Phone 2", "Landline Co.", 2025, "Superb", "Movie", 5);
-    digitalMedia movie2("Anime/Action", "16+", "movie", "Demon Slayer: Infinity Arc", "Ufotable Studios", 2024, "Excellent", "Movie", 7);
-    digitalMedia movie3("Action/Thriller", "18+", "movie", "The Raid", "XYZ Films", 2011, "Good", "Movie", 3);
-
-    // 4 Video Games
-    digitalMedia videoGame1("Adventure", "17+", "video-game", "A Plague Tale Requiem", "Focus", 2020, "Good", "Video Game", 1);
-    digitalMedia videoGame2("Stealth", "17+", "video-game", "The Last Of Us", "Naughty Dogs", 2013, "Ok", "Video Game", 1);
-    digitalMedia videoGame3("Action", "17+", "video-game", "Elden Ring", "FromSoftware", 2020, "Excellent", "Video Game", 2);
-    digitalMedia videoGame4("Choice", "18+", "video-game", "Dispatch", "Telltale Games", 2025, "Poor", "Video Game", 3);
-
-    System::catalogue1.addItem(book1);
-    System::catalogue1.addItem(book2);
-    System::catalogue1.addItem(book3);
-    System::catalogue1.addItem(book4);
-    System::catalogue1.addItem(book5);
-
-    System::catalogue1.addItem(NFBook1);
-    System::catalogue1.addItem(NFBook2);
-    System::catalogue1.addItem(NFBook3);
-    System::catalogue1.addItem(NFBook4);
-    System::catalogue1.addItem(NFBook5);
-
-    System::catalogue1.addItem(movie1);
-    System::catalogue1.addItem(movie2);
-    System::catalogue1.addItem(movie3);
-
-    System::catalogue1.addItem(magazine1);
-    System::catalogue1.addItem(magazine2);
-    System::catalogue1.addItem(magazine3);
-
-    System::catalogue1.addItem(videoGame1);
-    System::catalogue1.addItem(videoGame2);
-    System::catalogue1.addItem(videoGame3);
-    System::catalogue1.addItem(videoGame4);
+    Librarian librarian("Bob", "bob@gmail.com", System::catalogue1, 100, 6769);
+    ViewAuth::hinLibs.addLibrarian(librarian);
 
 
     // Emits a signal when the user succesfully logs in, to now open the catalogue screen
     BrowseCatalogue c(nullptr, System::catalogue1, &ViewAuth::mainPatron);
-    QObject::connect(&w, &ViewAuth::getLoginSuccess, &c, &BrowseCatalogue::show);
+    //QObject::connect(&w, &ViewAuth::getLoginSuccess, &c, &BrowseCatalogue::show);
+
+    // Changed this because we need to load the loans for this patron into memory now
+    // Use SQL query to bring our laons/holds into C++ objects
+    QObject::connect(&w, &ViewAuth::getLoginSuccess, [&w, &c] {
+        w.loadLoans();
+        c.show();
+
+         for (int i = 0; i < ViewAuth::mainPatron.getLoans().size(); i++){
+            int id = ViewAuth::mainPatron.getLoans().at(i).getItem().getCID();
+               for (int j = 0; j < c.itemSubList.size(); j++){
+                 if (c.itemSubList.at(j)->getItemID() == id){
+                       for (int k = 0; k < c.itemSubList.at(j)->findChildren<QPushButton*>().size(); k++){
+                           c.itemSubList.at(j)->findChildren<QPushButton*>().at(k)->setEnabled(false);
+                       }
+                       c.itemSubList.at(j)->findChild<QPushButton*>("ReturnLoanButton")->setEnabled(true);
+                       break;
+                 }
+             }
+        }
+
+    });
+
+
     bool value = false;
     //Loan(book1, tm());
+
+
+
+
+
+
+    // This represents our viewable GUI model, which will stay in-memory, since it stores viewable/gui data (Labels and buttons)
     for (int i = 0; i < c.itemSubList.size(); i++){
         // Checks for an add signal
         QObject::connect(c.itemSubList.at(i), &item::onLoanState, [&c, i, &w, &value]{
+            std::time_t now = std::time(nullptr);
+            // Convert to local tm structure
+            std::tm* local_time = std::localtime(&now);
             // Adds the loan to this patron and disables appropriate buttons
-            value = w.mainPatron.addLoan(Loan(c.itemSubList.at(i)->getMyItem(), tm()));
+          //
+          // CHANGE
+          //
+            value = w.mainPatron.addLoan(Loan(c.itemSubList.at(i)->getMyItem(), *local_time));
             // If value was succesfully added, then disable button
             if (value){
                 // Disable every button except the one that lets you return the loan
@@ -144,6 +189,17 @@ int main(int argc, char *argv[])
                     c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(false);
                 }
                 c.itemSubList.at(i)->findChild<QPushButton*>("ReturnLoanButton")->setEnabled(true);
+
+                // Check if item is still available
+                QSqlQuery query;
+                query.prepare("SELECT status FROM catalogue WHERE cid=?");
+                query.addBindValue(c.itemSubList.at(i)->getMyItem().getCID());
+                query.exec();
+                if (query.next()){
+                    if (query.value("status").toBool() == false){
+                        c.itemSubList.at(i)->findChildren<QTextEdit*>().at(3)->setText("Unavailable");
+                    }
+                }
             }
         });
 
@@ -151,6 +207,7 @@ int main(int argc, char *argv[])
         QObject::connect(c.itemSubList.at(i), &item::onHoldState, [&c, i, &w]{
             // Adds the hold to this patron and disables appropriate buttons
             w.mainPatron.addHold(c.itemSubList.at(i)->getMyItem());
+
             for (int j = 0; j < c.itemSubList.at(i)->findChildren<QPushButton*>().size(); j++){
                 c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(false);
             }
@@ -162,9 +219,22 @@ int main(int argc, char *argv[])
            // Check if item was added is done in viewItem.cpp
             // Removes the loan to this patron and enables all buttons
             w.mainPatron.removeLoan(c.itemSubList.at(i)->getMyItem());
+
             for (int j = 0; j < c.itemSubList.at(i)->findChildren<QPushButton*>().size(); j++){
                 c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(true);
             }
+
+            QSqlQuery query;
+            query.prepare("SELECT status FROM catalogue WHERE cid=?");
+            query.addBindValue(c.itemSubList.at(i)->getMyItem().getCID());
+            query.exec();
+            if (query.next()){
+                if (query.value("status").toBool() == true){
+                    c.itemSubList.at(i)->findChildren<QTextEdit*>().at(3)->setText("Available");
+                }
+            }
+
+
         });
 
         // Checks for a removeHold signal
@@ -172,11 +242,31 @@ int main(int argc, char *argv[])
             // Check if item was added is done in viewItem.cpp
             // Removes the hold to this patron and enables all buttons
             w.mainPatron.removeHold(c.itemSubList.at(i)->getMyItem());
+
             for (int j = 0; j < c.itemSubList.at(i)->findChildren<QPushButton*>().size(); j++){
                 c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(true);
             }
         });
+
     }
+    //Libarian successfully loggged in
+    QObject::connect(&w, &ViewAuth::LibrarianLogin, [&w]{
+        // Allocate on heap
+        EditCatalogue* editC = new EditCatalogue(nullptr, ViewAuth::mainLibrarian);
+        editC->show();
+
+        // Connect signals for items
+        for(int i = 0; i < editC->itemList.size(); i++){
+            QObject::connect(editC->itemList.at(i), &ViewRemoveItem::offRemoveItem,
+                [editC, i, &w]{
+                    w.mainLibrarian->removeItem(editC->itemList.at(i)->getItem());
+                });
+        }
+
+        // Optional: delete editC when closed
+        QObject::connect(editC, &QWidget::destroyed, editC, &QObject::deleteLater);
+    });
+
     return a.exec();
 }
 

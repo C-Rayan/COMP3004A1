@@ -14,6 +14,7 @@ class item : public QWidget{
 public:
     //explicit item(QWidget *parent = nullptr);
     explicit item(QWidget *parent = nullptr, const CatalogueItem& item = CatalogueItem());
+    explicit item(QWidget *parent = nullptr,  int id = 1);
     ~item();
     QSize sizeHint() const{
         return QSize(300, 100);
@@ -21,6 +22,7 @@ public:
     CatalogueItem getMyItem(){
         return myItem;
     }
+    int getItemID();
 signals:
     void onLoanState();
     void onHoldState();
@@ -36,6 +38,8 @@ private slots:
 private:
    // vector<Patron> loanedPatrons;
     CatalogueItem myItem;
+    // We have to store somethign to query the item
+    int itemId;
     Ui::item *ui;
 
 };
