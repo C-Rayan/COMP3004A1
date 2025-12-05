@@ -11,8 +11,9 @@ BrowseCatalogue::BrowseCatalogue(QWidget *parent, Catalogue catalogue, Patron* p
     QVBoxLayout* box = new QVBoxLayout(widget);
     widget->setLayout(box);
     ui->scrollArea->ensureWidgetVisible(widget);
-
-    // Go through every catalogue item, and add it to the view and to a list
+\
+    // D1 IMPLEMENTATION (For debugging)
+    // We already have the items in our list at this point, no need to change or query DB (NOT CHANGING ANYTHING, ONLY CREATING INTIIAL LAYOUT)
     for (int i = 0; i < catalogue.getItemList().size(); i++){
         item* ofItem = new item(widget, catalogue.getItemList().at(i));
         // Boxes get cutoff if you don't set size policy to minimum
@@ -39,7 +40,7 @@ void BrowseCatalogue::getSomeItem(){
 
 void BrowseCatalogue::on_accountButton_clicked()
 {
-    viewStatus *statusMenu =new viewStatus(this,  patron );
+    viewStatus *statusMenu =new viewStatus(this,  patron);
     statusMenu->setWindowFlags(Qt::Window);
     statusMenu->show();
 }

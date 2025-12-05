@@ -54,7 +54,7 @@ qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 178, 102, 2
 }</string>
        </property>
        <property name="text">
-        <string>CardNumber</string>
+        <string>CardNumber/Username</string>
        </property>
       </widget>
      </item>

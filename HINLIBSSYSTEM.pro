@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,6 +16,8 @@ SOURCES += \
     catalogue.cpp \
     catalogueitem.cpp \
     digitalMedia.cpp \
+    editcatalogue.cpp \
+    editpatron.cpp \
     librarian.cpp \
     loan.cpp \
     patron.cpp \
@@ -23,6 +25,7 @@ SOURCES += \
     systemadmin.cpp \
     viewItem.cpp \
     viewauth.cpp \
+    viewremoveitem.cpp \
     viewstatus.cpp
 
 HEADERS += \
@@ -30,6 +33,8 @@ HEADERS += \
     browsecatalogue.h \
     catalogue.h \
     catalogueitem.h \
+    editcatalogue.h \
+    editpatron.h \
     librarian.h \
     loan.h \
     patron.h \
@@ -37,15 +42,22 @@ HEADERS += \
     systemadmin.h \
     viewItem.h \
     viewauth.h \
+    viewremoveitem.h \
     viewstatus.h
 
 FORMS += \
     browsecatalogue.ui \
+    editcatalogue.ui \
+    editpatron.ui \
     viewItem.ui \
     viewStatus.ui \
-    viewauth.ui
+    viewauth.ui \
+    viewremoveitem.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    schema.sql
