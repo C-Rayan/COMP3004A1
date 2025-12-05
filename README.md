@@ -6,10 +6,10 @@ Instructions for Code:
 Installation:
 	- Install zip file
 	- Extract zip file where you want
-  - database location: /home/student/Downloads/COMP3004D2/inventory.db
+  - database location: /home/student/Downloads/team_57_D2/inventory.db
      
 
-Build: 
+Build:  
 	- Open the project via QTCreator
 	- Go to the build tab on top, then build all projects (or "Build only this project")
 
