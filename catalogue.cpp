@@ -6,15 +6,10 @@ void Catalogue::addItem(const CatalogueItem& item){
     this->itemList.push_back(item);
 }
 
-/*void Catalogue::removeItem(const CatalogueItem& item){
-    for (c)
-    for (CatalogueItem& iter : itemList){
-        if (iter.equals(item)){
-            itemList.
-        }
-    }
-}*/
+void Catalogue::removeItem(const CatalogueItem& item){
+    itemList.erase(std::remove(itemList.begin(), itemList.end(), item), itemList.end());
 
+}
 
 CatalogueItem Catalogue::findItem(const int uid){
     for (int i = 0; i < this->getItemList().size(); i++){

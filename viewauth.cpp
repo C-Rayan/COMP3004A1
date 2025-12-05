@@ -9,17 +9,20 @@
 #include "digitalMedia.cpp"
 #include "loan.h"
 #include "viewItem.h"
+#include  "editcatalogue.h"
 
 Catalogue System::catalogue1;
 System ViewAuth::hinLibs;
 Patron ViewAuth::mainPatron;
-int ViewAuth::mainCard;
+Librarian* ViewAuth::mainLibrarian = nullptr;
+
 
 ViewAuth::ViewAuth(QWidget *parent): QMainWindow(parent), ui(new Ui::ViewAuth)
 {
     ui->setupUi(this);
     // Create a new database and set the name
     db = QSqlDatabase::addDatabase("QSQLITE");
+    //Path may cause issues
     db.setDatabaseName("C:/Users/chray/OneDrive/Desktop/COMP3004/team_57_D1 (1)/team_57_D1/team_57_D1/COMP3004A1-main/inventory.db");
     if (!db.open()){
         qDebug() << "Error" << db.lastError();
@@ -46,6 +49,22 @@ void ViewAuth::on_buttonSignIn_clicked()
     if (ViewAuth::hinLibs.systemAuth(card, pass) != -1){
         ViewAuth::loginSuccessful = true;
         this->hide();
+        // Sends a signal about the success
+        //
+        // DEV NOTE: Combine 
+        //
+        if(ViewAuth::hinLibs.isPatron(card)){
+            Patron newPatron = ViewAuth::hinLibs.getPatronAtIndex(index);
+            mainPatron = newPatron;
+            emit ViewAuth::getLoginSuccess();
+        }
+        else{
+            Librarian newLibrarian = ViewAuth::hinLibs.getLibrarianAtIndex(index);
+            mainLibrarian = new Librarian(newLibrarian.getName(),newLibrarian.getEmail(), newLibrarian.getCatalogue(), newLibrarian.getCardNumber(), newLibrarian.getPin());
+            emit  ViewAuth::LibrarianLogin();
+        }
+
+
         /* Uses an SQL Query to retrieve the person with the name from the DB */
         QSqlQuery query;
         query.prepare("SELECT * FROM PATRONS WHERE card_number = ?");
@@ -113,6 +132,9 @@ int main(int argc, char *argv[])
     }
 
 
+    Librarian librarian("Bob", "bob@gmail.com", System::catalogue1, 100, 6769);
+    ViewAuth::hinLibs.addLibrarian(librarian);
+
 
     // Emits a signal when the user succesfully logs in, to now open the catalogue screen
     BrowseCatalogue c(nullptr, System::catalogue1, &ViewAuth::mainPatron);
@@ -152,9 +174,14 @@ int main(int argc, char *argv[])
     for (int i = 0; i < c.itemSubList.size(); i++){
         // Checks for an add signal
         QObject::connect(c.itemSubList.at(i), &item::onLoanState, [&c, i, &w, &value]{
+            std::time_t now = std::time(nullptr);
+            // Convert to local tm structure
+            std::tm* local_time = std::localtime(&now);
             // Adds the loan to this patron and disables appropriate buttons
-            value = w.mainPatron.addLoan2(Loan(c.itemSubList.at(i)->getMyItem(), tm()));
-
+          //
+          // CHANGE
+          //
+            value = w.mainPatron.addLoan(Loan(c.itemSubList.at(i)->getMyItem(), *local_time));
             // If value was succesfully added, then disable button
             if (value){
                 // Disable every button except the one that lets you return the loan
@@ -220,7 +247,26 @@ int main(int argc, char *argv[])
                 c.itemSubList.at(i)->findChildren<QPushButton*>().at(j)->setEnabled(true);
             }
         });
+
     }
+    //Libarian successfully loggged in
+    QObject::connect(&w, &ViewAuth::LibrarianLogin, [&w]{
+        // Allocate on heap
+        EditCatalogue* editC = new EditCatalogue(nullptr, ViewAuth::mainLibrarian);
+        editC->show();
+
+        // Connect signals for items
+        for(int i = 0; i < editC->itemList.size(); i++){
+            QObject::connect(editC->itemList.at(i), &ViewRemoveItem::offRemoveItem,
+                [editC, i, &w]{
+                    w.mainLibrarian->removeItem(editC->itemList.at(i)->getItem());
+                });
+        }
+
+        // Optional: delete editC when closed
+        QObject::connect(editC, &QWidget::destroyed, editC, &QObject::deleteLater);
+    });
+
     return a.exec();
 }
 

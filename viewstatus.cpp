@@ -1,4 +1,4 @@
-#include "viewStatus.h"
+#include "viewstatus.h"
 #include "ui_viewStatus.h"
 
 viewStatus::viewStatus(QWidget *parent, Patron* person) :

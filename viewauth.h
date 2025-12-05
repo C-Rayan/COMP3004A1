@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "system.h"
+#include "librarian.h"
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -27,6 +28,7 @@ public:
     void loadLoans();
 
     static Patron mainPatron;
+    static Librarian* mainLibrarian;
 
     static System hinLibs;
 
@@ -35,6 +37,7 @@ public:
 signals:
     void getLoginSuccess();
     void Success();
+    void LibrarianLogin();
 
 private slots:
     void on_buttonSignIn_clicked();

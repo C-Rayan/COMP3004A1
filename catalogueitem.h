@@ -7,6 +7,7 @@
 #include <iterator>
 #include <ctime>
 #include <vector>
+#include <list>
 #include <iterator>
 #include <algorithm>
 
@@ -23,7 +24,7 @@ private:
     string format;
     string dueDate; // consider turning into date type
     int quantity;
-    vector<string> holds;
+    list<string> holds;
 
 public:
     // compares both addresses tocheck if they are same
@@ -44,12 +45,17 @@ public:
     const string& getCondition(){return condition;};
     int getQuantity(){return quantity;};
     const string& getDueDate(){return dueDate;};
+    const list<string> getListOfHolders(){return holds;};
 
     void reduceQuantity(int amount);
     void increaseQuantity(int amount);
     void setStatus(std::string status);
     int  searchQueue(string name);
     bool equals(const CatalogueItem& item);
+    void addToQueue(string name);
+    void removeFromQueue(string name);
+
+
     int getCID() const;
 };
 
