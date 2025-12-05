@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include "system.h"
 #include "librarian.h"
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,10 +25,14 @@ public:
     // static Patron& getMainPatron(){
     //     return *mainPatron;
     // }
+    void loadLoans();
+
     static Patron mainPatron;
     static Librarian* mainLibrarian;
 
     static System hinLibs;
+
+    static int mainCard;
 
 signals:
     void getLoginSuccess();
@@ -37,5 +45,8 @@ private slots:
 private:
     Ui::ViewAuth *ui;
     bool loginSuccessful = false;
+    QSqlDatabase db;
+    //static Patron* mainPatron;
+    void loadHolds();
 };
 #endif // VIEWAUTH_H

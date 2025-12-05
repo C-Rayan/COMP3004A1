@@ -1,15 +1,19 @@
 #include "viewItem.h"
 #include "ui_viewItem.h"
 #include "patron.h"
+#include <QSqlQuery>
 
 item::item(QWidget *parent, const CatalogueItem& item): QWidget(parent), myItem(item), ui(new Ui::item){
     // Set all the labels to what they're supposed the item's value
     ui->setupUi(this);
+    this->itemId = myItem.getCID();
+
     ui->txtTitle_2->setText(QString::fromStdString(myItem.getTitle()));
     ui->txtAuthor_2->setText(QString::fromStdString(myItem.getAuthor()));
     ui->txtFormat_2->setText(QString::fromStdString(myItem.getFormat()));
     ui->txtAvailable_2->setText(QString::fromStdString(myItem.getStatus()));
 }
+
 
 item::~item()
 {
@@ -44,3 +48,6 @@ void item::on_ReturnHoldButton_clicked(){
             emit offHoldState();
 }
 
+int item::getItemID(){
+    return this->itemId;
+}

@@ -15,6 +15,7 @@ using namespace std;
 
 class CatalogueItem{
 private:
+    int cid;
     string title;
     string author;
     int publishYear;
@@ -31,7 +32,7 @@ public:
         return this == &check;
     }
     //Constructor
-    CatalogueItem(const string& title, const string& author, int publishYear, const string& condtion, const string& format, int quantity);
+    CatalogueItem(int cid, const string& title, const string& author, int publishYear, const string& condtion, const string& format, int quantity);
     // Base constructor, not useful, only used to force the default because parameter of QWidget functions
     CatalogueItem():
         title("placeholder"), author("author"), publishYear(0), status("unavailable"), condition("unknown"), format("unknown"), quantity(-1)
@@ -48,13 +49,14 @@ public:
 
     void reduceQuantity(int amount);
     void increaseQuantity(int amount);
-    void setStatus(std::string status){this->status = status;}
+    void setStatus(std::string status);
     int  searchQueue(string name);
     bool equals(const CatalogueItem& item);
     void addToQueue(string name);
     void removeFromQueue(string name);
 
 
+    int getCID() const;
 };
 
 #endif
