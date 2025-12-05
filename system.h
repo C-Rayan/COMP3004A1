@@ -5,7 +5,6 @@
 #include "librarian.h"
 #include "catalogue.h"
 #include <string>
-#include <QSqlQuery>
 
 class System {
 public:

@@ -10,7 +10,6 @@ public:
     void addItem(const CatalogueItem& item);
     void removeItem(const CatalogueItem& item);
     std::vector<CatalogueItem> getItemList() {return itemList;}
-    CatalogueItem findItem(const int uid);
 private:
     std::vector<CatalogueItem> itemList;
 };
