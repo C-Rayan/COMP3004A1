@@ -14,3 +14,12 @@ void Catalogue::addItem(const CatalogueItem& item){
         }
     }
 }*/
+
+
+CatalogueItem Catalogue::findItem(const int uid){
+    for (int i = 0; i < this->getItemList().size(); i++){
+        if (this->getItemList().at(i).getCID() == uid){
+            return this->getItemList().at(i);
+    }
+}
+}

@@ -4,6 +4,7 @@
 #include <string>
 #include "loan.h"
 #include <string>
+#include <QSqlQuery>
 
 using std::string;
 
@@ -16,10 +17,11 @@ private:
     int pin;
     std::vector<Loan> myLoans;
     std::vector<CatalogueItem> myHolds;
-    int numLoans = 0;
+    // NEED TO FIX LATER BY GETTING FROM DB INSTEAD OF THIS WAY
+    int numLoans;
 
 public:
-    Patron(const string& name, const string& email, int pin);
+    Patron(int cardNumber, const string& name, const string& email, int pin, int numLoans);
 
     // Used to create an empty patron (Whose values will be stored later)
     Patron();
@@ -27,7 +29,6 @@ public:
     std::string getName();
     void ViewAccountStatus();
     int getLoansSize();
-    bool addLoan(const Loan& loan);
     bool getLoanSuccess();
     std::vector<Loan> getLoans();
     std::vector<CatalogueItem> getHoldList();
@@ -36,5 +37,12 @@ public:
     void removeLoan(const CatalogueItem& item);
     void removeHold(const CatalogueItem& item);
     Loan* getLoanForItem(const CatalogueItem& item);
+
+    void addLoan(const Loan& loan);
+    bool addLoan2(const Loan& loan);
+    int getId() {return cardNumber;}
+    void loadLoans();
+    void loadHolds();
+
 };
 #endif
