@@ -40,6 +40,7 @@ void viewStatus::loadData(){
     map<string, int> holds = status.getHoldList();
         for (auto hold :holds ) {
             ui->holdsTitleList->addItem(QString::fromStdString(hold.first));
+            ui->holdsTitleList->addItem("asses");
             ui->holdsPositionList->addItem(QString::fromStdString(to_string(hold.second)));
     }
 

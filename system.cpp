@@ -2,7 +2,6 @@
 System::System(): patronList(){
 }
 
-// Function used in D1, no corresp implepmentation in D2
 void System::addPatron(const Patron& patron){
     this->patronList.push_back(patron);
 }
@@ -13,17 +12,23 @@ void System::addLibrarian(const Librarian &lib){
 
 // Simple check to determine whether a card number and pin are correct
 int System::systemAuth(const int cardNumber,const int pin){
-    // Queries the database to find an equivalent cardNumber and pin
-    QSqlQuery query;
-    query.prepare("SELECT * FROM PATRONS WHERE card_number = ? AND pin = ?");
-    query.addBindValue(cardNumber);
-    query.addBindValue(pin);
-    if (query.exec()){
-        // Gets the user and returns it
-        if (query.next()){
-            return query.value("card_number").toInt();
+    // Check if username matches inside of memory database and what type of user
+    if(isPatron(cardNumber)){
+        for (int i = 0; i < (int) this->patronList.size(); i++){
+            if (patronList[i].getCardNumber() == cardNumber && patronList[i].getPin() == pin){
+                return i;
+            }
         }
     }
+    else{
+        for (int i = 0; i < (int) this->librarianList.size(); i++){
+            if (librarianList.at(i).getCardNumber() == cardNumber && librarianList.at(i).getPin() == pin){
+                return i;
+            }
+        }
+    }
+
+    // Non valid username or password
     return -1;
 }
 

@@ -1,8 +1,6 @@
 #include "catalogueitem.h"
-#include "qsqlquery.h"
 
-CatalogueItem::CatalogueItem(int cid, const string& title, const string& author, int publishYear, const string& condition, const string& format, int quantity){
-    this->cid = cid;
+CatalogueItem::CatalogueItem(const string& title, const string& author, int publishYear, const string& condition, const string& format, int quantity){
     this->title = title;
     this->author = author;
     this->publishYear = publishYear;
@@ -19,30 +17,14 @@ CatalogueItem::CatalogueItem(int cid, const string& title, const string& author,
 void CatalogueItem::reduceQuantity(int amount){
     if (this->quantity - amount >= 0){
         this->quantity = (this->quantity) - amount;
-        QSqlQuery query;
-        // Update the quantity to persist in the DB
-        std::cout << "Quantity: ";
-        std::cout << quantity << std::endl;
-        query.prepare("UPDATE catalogue SET quantity = ? WHERE cid = ?");
-        query.addBindValue(this->quantity);
-        query.addBindValue(this->cid);
-        query.exec();
     }
     else{
         std::cout << "The quantity cannot reduce below 0" << std::endl;
     }
 }
 
-
 void CatalogueItem::increaseQuantity(int amount){
-    this->quantity = this->quantity + amount;
-    std::cout << "Amount: ";
-    std::cout << amount << std::endl;
-    QSqlQuery query;
-    query.prepare("UPDATE catalogue SET quantity = ? WHERE cid = ?");
-    query.addBindValue(this->quantity);
-    query.addBindValue(this->cid);
-    query.exec();
+    this->quantity = quantity + amount;
 }
 
 void CatalogueItem::addToQueue(string name){
@@ -79,15 +61,3 @@ bool CatalogueItem::equals(const CatalogueItem& item){
     return false;
 }
 
-int CatalogueItem::getCID() const{
-    return this->cid;
-}
-
-void CatalogueItem::setStatus(std::string status){
-    this->status = status;
-    QSqlQuery query;
-    query.prepare("UPDATE catalogue SET status = ? WHERE cid = ?");
-    query.addBindValue(QString::fromStdString(this->status));
-    query.addBindValue(this->cid);
-    query.exec();
-}
